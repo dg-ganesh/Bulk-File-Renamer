@@ -163,3 +163,5 @@ GitHub: https://github.com/dg-ganesh
 ## License
 
 This project is released under the MIT License.
+
+screenshots/poster.png
