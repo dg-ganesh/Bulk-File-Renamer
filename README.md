@@ -164,4 +164,4 @@ GitHub: https://github.com/dg-ganesh
 
 This project is released under the MIT License.
 
-screenshots/poster.png
+![Bulk File Renamer Poster](screenshots/poster.png)
