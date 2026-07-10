@@ -1,0 +1,174 @@
+Data lake in AWS -
+https://cglearning.udemy.com/course/data-lake-in-aws/learn/lecture/19386334#overview
+
+
+Data warehouse the data is structure and is entered for a specific purpose
+Data lake data is raw and purpose is not dfined yet
+Business value for data lake is not defined yet
+
+S3 is primary data lake in AWS
+
+Streaming dta into datalake in AWS is achived thorugh Kinesis Firehouse: 
+						      ==================
+
+For on prem- need to install Storage gatway and this plug in can share to S3 	
+For migration one can use Snowball, using AES 256 encryption
+Need to initially define metadata before storing data into the lake, else it becomes a data swamp. 
+
+Metadata is done in the form of Data catelog. This can either be done through a program i.e. triggering lambda when the data loads, this identifies the metadata and stores it else where 
+
+
+Apache parquet: (developed by twitter and cloudera)
+USer columnar storage, (whereas excel, JSON etc store info on row based format)
+IT uses WORM format, write only read many time format.
+
+The normal data format is stored in row, e.g. if the data is Name; age
+e.g
+Ganesh	40
+Arnav	10
+Raksha	30
+The CSV stores in its db as 
+Ganesh 40, arnav 10, raksha 30 etc. 
+
+Instead if parquet then it stores as 
+Ganesh Arnav Raksha; 40 10 30.
+This helps in quicker retrival of stored data. 
+
+
+Amazon EMR is the fully managed hadoop cluster. useing Hive. 
+it can load either using hive format or using Spark format. 
+
+Glue on other hand is a managed ETL solution for data loadng. 
+Simple point glue to data source. it will define how to extract and extract it
+Glue automaticaly generate ETL scripts, it also schedules run on spark as per required. 
+
+Kinesis firehose 
+generate parquets for teh data before loading. and then loads the data into storage
+Querying modes
+=============
+Athena:
+This can direclty query data on the S3 or any data file. 
+This is only charged on the basis on query run. 
+REcommended for Adhoc data discovery
+
+
+Redshit spectrum:
+This is also anothe querying format, it support querying different node and can use existing BI tools to work with redshift
+recommended for more complex queries and more people using it. 
+
+Analytics portfolio modes:
+Can use 
+EMR(for mainly hadoop hive etc, spark, hbase etc) or 
+Sagemaker (for running machine learning logs or generating models) or Artificial intelligence (video, image natural lang process, this helps in analyzing videos pics etc)
+Quicksight (busines intelligence - provide dashboards by connecting to Athena, redshift and RDBMS etc)
+REdshift ( datawarehouse solution from Amazon for petabyte data storage - one can load data from S3 if required)
+Lambda - (Business logic function as a service, serverless code execution)
+
+BAtch vs streaming
+Data can be ingested in mode of batch or it can be ingested as stream. sreaming is used mainly in cases where the live data related action is very important. e.g. map informaiton. 
+
+Kinesis: is the tool provided by AWS for streaming
+Service in Kinesis:
+Video stream - directlt streams video like CCTV into storage to be used for Macine learning etc
+Data stream: this is to stream data to be used for spark, EMR, 	or even lambda
+Kinesis firehose: collects and stores data and can be used for S3, redshit etc. This scales automatically
+Kinesis data analytics: This route output of dataanalytics into data stores
+
+Kinesis can handle 100/ 1000 data from any source
+
+
+AWS Glue - 
+===========
+This service crawls the data and identifies the data catalog. 
+When loading files from S3, Glues can create the metadata catalog automatically.
+https://cglearning.udemy.com/course/data-lake-in-aws/learn/lecture/19453844#content
+default role creation for glue will have aws-glue.. so need to create S3 bucket in that name
+
+After selecting the file to updloa, select crawler and add it
+crawle can do for S3 or dynamoDb or JDBC
+and select the file - choose run on deman option
+
+crawler, reads the data idenfities the data type and all. 
+
+Glue also has ETL tool, which converts the file into parquet format. e.g CSV to parquet
+For this you have to select a job and add them 
+Need to select source and target. and format as parquet type as well. 
+Glue service will convert and run a pyspark script, then the parquet file will be formed. Run glue crawler again to obtain the metadata
+
+Glue crawler can be scheudled to run regularly and catelog on ongoing basis
+
+
+
+Athena:
+========
+This can direclty query data on the S3 or any data file. This is only charged on the basis on query run. REcommended for Adhoc data discovery
+
+IN the athena main window, select the DB, it will list the catellogue information as pulled in by glue, 
+You can run default predefine queyr (like list first 10 row etc) 
+it shows window similar to SQL query. 
+
+This basically means you dont need to provision serves to query the data which is stored blindly in S3. 
+
+Athena basically backs on the catelog built by Glue, so its important to ensre glue is regularly run
+
+CSV works great if the col structure is not changed meaning if no new col are added or if name change etc. Else Athna will fail. 
+
+But in parquet format the col numbe is not stored but it is the name of the col that is stored. This means if the col changes it will not impact.
+but again if the col name are changed then athena will return blank.
+
+PArtitioning:
+is an important technique to ensure the queries are run quickly and cost effectively. In this case there are sepreate folders crated for each partitioning and when we can the queries can either collate altogether or query based on partitinins. but the cateloges needs toe be updated regularly when the partitions are updated 
+
+The catelog can also be maintained manually. 
+
+IF the parquet are to be maintained in the folder based on hive folder structure.
+Then the name of the partition folder will be in key; value pairs. instead of just names
+You can further design more sub folder to perform further partitions.
+
+Amazon AI / ML
++++++++++++++++
+
+Amazon comprehend:
+==================
+This allows us to make meaningful interpretation of text data
+like understand sentiment or classificaiton or medical info etc
+
+Comprehend is one of its NLP services
+IT can find things like if we pass a para it till tell which words are talking about a place. Which is talking about time, which is talking about people.
+
+It can even judge the tone / sentiment and say if its neutral or positive or negative or mixed sentiment. 
+it can comprehend medical data more importantly
+
+Sagemaker:
+==========
+it is not available in all the regions. 
+One must provide the S3 bucket details on where the instance can find the data to process. we can also grant access to all buckets
+
+The service is open throught Jupyter. Jupyter is a editor used by AI ML scientists. 
+
+Normally the sagemaker codes are stored in git, we can imprt it and clone it in local folder.
+
+Python lab:
+===========
+Numpy is a library of mathematical functions
+Pandas is a high performance library for data analysis
+matplotlin is a plottin library to visualize data
+
+With pandas you can read data in various varity of data format like excel json html etc. using read command
+After reading it oranizes in rows and col structure
+it automatically creates index
+You can give describe to get all description e.g. std dev, mean avg etc
+ 
+With pandas and comprehend, you can run comprehend for 100,000 records and generate output.
+Later one can use Athena and make sense of the data
+
+Serverless application using Lambda, Kinesis, S3, Athena and comprehend
+=======================================================================
+https://cglearning.udemy.com/course/data-lake-in-aws/learn/lecture/19519054#overview
+
+In this exampl.
+We stream to obtain run time reviews from kinesis firehose.
+Then use a labda to pull comprehend to interpret the sentiment, to find sentiment and ingest it into S3, and later also use Athena to query stored data
+For this we have to create an instance of lambda that support spark. 
+
+
